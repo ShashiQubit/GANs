@@ -1,0 +1,8 @@
+silence-tensorflow
+yfinance
+matplotlib
+numpy
+scipy
+statsmodels
+tensorflow
+tensorflow-probability
