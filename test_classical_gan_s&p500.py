@@ -818,8 +818,9 @@ class GAN(tf.keras.Model):
 
             # checkpoint saving
             if (epoch + 1) % 6 == 0:
-                self.generator.save_weights(f"checkpoints/generator_epoch_{epoch+1}.h5")
-                self.critic.save_weights(f"checkpoints/critic_epoch_{epoch+1}.h5")
+                self.generator.save_weights(f"checkpoints/generator_epoch_{epoch+1}.weights.h5")
+                self.critic.save_weights(f"checkpoints/critic_epoch_{epoch+1}.weights.h5")
+
 
             # minimal console output (epoch numbers)
             if epoch % 1 == 0:
