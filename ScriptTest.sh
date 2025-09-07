@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=20
+#SBATCH --cpus-per-task=48
 #SBATCH --time=01:00:00
 #SBATCH --partition=small
 #SBATCH --error=%J.err
