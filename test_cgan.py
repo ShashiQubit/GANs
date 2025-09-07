@@ -48,6 +48,7 @@ import time
 import random
 import tensorflow as tf
 import tensorflow_probability as tfp
+import pandas as pd
 
 
 # limit GPU memory growth to avoid OUT_OF_MEMORY issues (before initializing GPU -- if used)
@@ -65,52 +66,37 @@ if gpus:
         print(e)
 
 
-# download daily S&P 500 data from Yahoo Finance from 1/1/2008 since 31/12/2022
+# Load the data from the saved CSV file with a standard single-level header
+sp500 = pd.read_csv('sp500_data.csv')
 
-sp500 = yf.download('^GSPC', start='2008-01-01', end='2022-12-31')
+# Convert the 'Close' column to numeric, coercing errors
+sp500['Close'] = pd.to_numeric(sp500['Close'], errors='coerce')
 
+# Drop any rows with missing 'Close' values after coercion
+sp500.dropna(subset=['Close'], inplace=True)
 
-# pandas DataFrame with 6 columns, (Open, High, Low, Close, Adj Close, and Volume values)
-
-# extract daily closing values as a numpy array
-
+# Convert the numeric 'Close' values to a TensorFlow tensor
 sp500_close = tf.convert_to_tensor(sp500['Close'].values)
 
 
-# Remove the extra dimension of size 1
-
-sp500_close = tf.squeeze(sp500_close)
-
-
 # display the shape of the numpy array
-
 print('S&P500 shape (total days): ', tf.shape(sp500_close))
 
 
 # check if GPU is available
-
 print("GPU Available:", tf.config.list_physical_devices('GPU'))
 
-
 # check which GPU is being used
-
 print("GPU Device:", tf.test.gpu_device_name())
 
-
-df = sp500.reset_index()
-
-date = df['Date']
+# Use the DataFrame's index for the date information
+date = sp500.index
 
 # plot the S&P 500 data
-
 plt.plot(date, sp500_close)
-
 plt.xlabel('Days')
-
 plt.ylabel('S&P 500 Closing Value')
-
 plt.title('S&P 500 Index')
-
 plt.grid()
 
 plt.savefig("plots/raw_series_of_S&P500.svg", format="svg")
